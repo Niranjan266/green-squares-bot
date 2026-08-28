@@ -1,0 +1,61 @@
+name: Daily Activity Bot
+
+on:
+  schedule:
+    - cron: '0 6 * * *'    # 11:30 AM IST — morning slot
+    - cron: '0 12 * * *'   # 5:30 PM IST  — afternoon slot
+    - cron: '45 15 * * *'  # 9:15 PM IST  — evening slot
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: activity-bot
+  cancel-in-progress: false
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Needed for rebase and push
+
+      - name: Set up Git identity as Niranjan
+        run: |
+          git config user.name "Niranjan"
+          git config user.email "130957609+Niranjan266@users.noreply.github.com"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run commit script
+        run: python3 commit.py
+
+      - name: Stage files if changed (pre-pull)
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "📌 Pre-pull changes found. Committing..."
+            git add .
+            git commit -m "📌 Pre-pull auto-commit to avoid rebase error" || echo "Nothing to commit"
+          else
+            echo "✅ No local changes to stage."
+          fi
+
+      - name: Pull latest changes before pushing
+        run: git pull origin main --rebase
+
+      - name: Push if commits are ahead
+        run: |
+          AHEAD=$(git rev-list --count origin/main..HEAD)
+          echo "Local branch is ahead by $AHEAD commit(s)."
+          if [ "$AHEAD" -gt 0 ]; then
+            echo "🔄 Changes detected. Pushing..."
+            git push origin main
+          else
+            echo "✅ No new commits to push."
+          fi

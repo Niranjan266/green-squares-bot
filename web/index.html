@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>green-squares-bot — Niranjan</title>
+<style>
+  :root{
+    --bg:#ffffff; --panel:#f6f8fa; --border:#d1d9e0; --text:#1f2328;
+    --muted:#59636e; --accent:#1f883d;
+    --l0:#ebedf0; --l1:#9be9a8; --l2:#40c463; --l3:#30a14e; --l4:#216e39;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#0d1117; --panel:#151b23; --border:#3d444d; --text:#e6edf3;
+      --muted:#9198a1; --accent:#3fb950;
+      --l0:#151b23; --l1:#033a16; --l2:#196c2e; --l3:#2ea043; --l4:#56d364;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+    padding:32px 20px 64px}
+  .wrap{max-width:960px;margin:0 auto}
+  header{margin-bottom:28px}
+  h1{margin:0 0 6px;font-size:24px;letter-spacing:-.02em}
+  h1 .dot{color:var(--accent)}
+  .sub{color:var(--muted);font-size:14px;margin:0}
+  .sub a{color:var(--accent);text-decoration:none}
+  .sub a:hover{text-decoration:underline}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:24px 0}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+  .card .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  .card .v{font-size:28px;font-weight:650;letter-spacing:-.02em;margin-top:4px;font-variant-numeric:tabular-nums}
+  .card .n{font-size:12px;color:var(--muted);margin-top:2px}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:20px}
+  .panel h2{margin:0 0 14px;font-size:14px;font-weight:600;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.05em}
+  .scroll{overflow-x:auto;padding-bottom:4px}
+  .grid{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,11px);gap:3px;width:max-content}
+  .cell{width:11px;height:11px;border-radius:2px;background:var(--l0);outline:1px solid rgba(27,31,35,.06);outline-offset:-1px}
+  .legend{display:flex;align-items:center;gap:6px;justify-content:flex-end;
+    margin-top:10px;font-size:11px;color:var(--muted)}
+  .legend .cell{width:10px;height:10px}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--border)}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  tr:last-child td{border-bottom:none}
+  .bar{display:inline-block;height:7px;border-radius:3px;background:var(--accent);vertical-align:middle}
+  .state{color:var(--muted);font-size:14px;padding:8px 0}
+  footer{color:var(--muted);font-size:12px;text-align:center;margin-top:34px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1><span class="dot">&#9679;</span> green-squares-bot</h1>
+    <p class="sub">Live activity dashboard &mdash;
+      <a href="https://github.com/Niranjan266/green-squares-bot" target="_blank" rel="noopener">Niranjan266/green-squares-bot</a>
+    </p>
+  </header>
+
+  <div id="state" class="state">Loading activity data&hellip;</div>
+
+  <div id="content" hidden>
+    <div class="cards">
+      <div class="card"><div class="k">Total commits</div><div class="v" id="total">&ndash;</div><div class="n" id="span"></div></div>
+      <div class="card"><div class="k">Today</div><div class="v" id="today">&ndash;</div><div class="n" id="todayNote"></div></div>
+      <div class="card"><div class="k">Current streak</div><div class="v" id="streak">&ndash;</div><div class="n">consecutive days</div></div>
+      <div class="card"><div class="k">Daily average</div><div class="v" id="avg">&ndash;</div><div class="n">commits / active day</div></div>
+    </div>
+
+    <div class="panel">
+      <h2>Last 12 months</h2>
+      <div class="scroll"><div class="grid" id="heat"></div></div>
+      <div class="legend">
+        <span>Less</span>
+        <span class="cell" style="background:var(--l0)"></span>
+        <span class="cell" style="background:var(--l1)"></span>
+        <span class="cell" style="background:var(--l2)"></span>
+        <span class="cell" style="background:var(--l3)"></span>
+        <span class="cell" style="background:var(--l4)"></span>
+        <span>More</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Recent activity</h2>
+      <table><thead><tr><th>Date</th><th>Day</th><th></th><th class="num">Commits</th></tr></thead>
+      <tbody id="recent"></tbody></table>
+    </div>
+  </div>
+
+  <footer>Data read live from <code>.commit_tracker.json</code> on the <code>main</code> branch.</footer>
+</div>
+
+<script>
+const SRC = "https://raw.githubusercontent.com/Niranjan266/green-squares-bot/main/.commit_tracker.json";
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+function iso(d){
+  return d.getFullYear() + "-" +
+    String(d.getMonth() + 1).padStart(2, "0") + "-" +
+    String(d.getDate()).padStart(2, "0");
+}
+
+function level(n){ if(!n) return 0; if(n < 10) return 1; if(n < 20) return 2; if(n < 30) return 3; return 4; }
+
+function streakFrom(counts){
+  let s = 0;
+  const d = new Date();
+  // Today may not have run yet, so allow the streak to start at yesterday.
+  if(!counts[iso(d)]) d.setDate(d.getDate() - 1);
+  while(counts[iso(d)]){ s++; d.setDate(d.getDate() - 1); }
+  return s;
+}
+
+function render(raw){
+  const counts = {};
+  for(const key of Object.keys(raw)){
+    if(DATE_RE.test(key) && typeof raw[key] === "number") counts[key] = raw[key];
+  }
+  const targets = raw.daily_targets || {};
+  const days = Object.keys(counts).sort();
+  if(!days.length) throw new Error("no dated entries found");
+
+  const values = days.map(function(d){ return counts[d]; });
+  const total = values.reduce(function(a, b){ return a + b; }, 0);
+  const todayK = iso(new Date());
+
+  document.getElementById("total").textContent = total.toLocaleString();
+  document.getElementById("span").textContent = days[0] + " → " + days[days.length - 1];
+  document.getElementById("today").textContent = counts[todayK] || 0;
+  document.getElementById("todayNote").textContent =
+    targets[todayK] ? "of " + targets[todayK] + " target" : "no run yet today";
+  document.getElementById("streak").textContent = streakFrom(counts);
+  document.getElementById("avg").textContent = (total / days.length).toFixed(1);
+
+  // Heatmap: 53 weeks ending on the Saturday of the current week.
+  const heat = document.getElementById("heat");
+  const end = new Date();
+  end.setDate(end.getDate() + (6 - end.getDay()));
+  const start = new Date(end);
+  start.setDate(start.getDate() - (53 * 7 - 1));
+  const frag = document.createDocumentFragment();
+  for(const d = new Date(start); d <= end; d.setDate(d.getDate() + 1)){
+    const k = iso(d);
+    const n = counts[k] || 0;
+    const cell = document.createElement("div");
+    cell.className = "cell";
+    cell.style.background = "var(--l" + level(n) + ")";
+    cell.title = k + ": " + n + " commit" + (n === 1 ? "" : "s");
+    frag.appendChild(cell);
+  }
+  heat.appendChild(frag);
+
+  // Recent activity: last 14 active days, newest first.
+  const max = Math.max.apply(null, values.concat([1]));
+  const tbody = document.getElementById("recent");
+  days.slice(-14).reverse().forEach(function(k){
+    const n = counts[k];
+    const dt = new Date(k + "T00:00:00");
+    const tr = document.createElement("tr");
+
+    const tdDate = document.createElement("td");
+    tdDate.textContent = k;
+    const tdDay = document.createElement("td");
+    tdDay.textContent = dt.toLocaleDateString(undefined, {weekday: "short"});
+    const tdBar = document.createElement("td");
+    const bar = document.createElement("span");
+    bar.className = "bar";
+    bar.style.width = Math.max(4, (n / max) * 130) + "px";
+    tdBar.appendChild(bar);
+    const tdNum = document.createElement("td");
+    tdNum.className = "num";
+    tdNum.textContent = n;
+
+    tr.appendChild(tdDate); tr.appendChild(tdDay);
+    tr.appendChild(tdBar); tr.appendChild(tdNum);
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById("state").hidden = true;
+  document.getElementById("content").hidden = false;
+}
+
+fetch(SRC, {cache: "no-store"})
+  .then(function(r){ if(!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+  .then(render)
+  .catch(function(e){
+    document.getElementById("state").textContent =
+      "Could not load activity data (" + e.message + "). The repository may still be initializing.";
+  });
+</script>
+</body>
+</html>

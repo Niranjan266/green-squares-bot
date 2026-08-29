@@ -762,3 +762,4 @@
 [2026-08-28 11:52:59 PM] The habit of showing up wins the game.
 [2026-08-29 09:44:36 AM] The habit of showing up wins the game.
 [2026-08-29 09:44:36 AM] Even a tiny push moves the needle.
+[2026-08-29 09:44:36 AM] Discipline beats motivation on the hard days.

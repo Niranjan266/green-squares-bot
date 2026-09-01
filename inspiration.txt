@@ -834,3 +834,4 @@
 [2026-09-01 09:21:50 PM] Momentum is built, not found.
 [2026-09-01 09:21:50 PM] Compounding works on habits too.
 [2026-09-01 09:21:50 PM] Done is better than perfect.
+[2026-09-01 09:21:50 PM] It's not about perfection. It's about progress.

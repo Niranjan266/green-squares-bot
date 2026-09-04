@@ -823,3 +823,4 @@
 [2026-09-04 12:21:59 AM] You're one step closer to your goal.
 [2026-09-04 12:21:59 AM] Stay curious, keep learning.
 [2026-09-04 04:34:31 PM] Just showing up matters.
+[2026-09-04 04:34:31 PM] Discipline beats motivation on the hard days.

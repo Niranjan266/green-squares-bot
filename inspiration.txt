@@ -944,3 +944,4 @@
 [2026-09-10 09:06:57 PM] Compounding works on habits too.
 [2026-09-10 09:06:57 PM] Discipline beats motivation on the hard days.
 [2026-09-10 09:06:57 PM] Consistency is more important than intensity.
+[2026-09-10 09:06:57 PM] Done is better than perfect.

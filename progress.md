@@ -897,3 +897,4 @@
 [2026-09-11 04:34:28 PM] Ship it, then make it better.
 [2026-09-11 04:34:28 PM] Don't break the streak — commit today!
 [2026-09-11 04:34:28 PM] Even a tiny push moves the needle.
+[2026-09-11 04:34:28 PM] Write code you'd be happy to debug at 3am.

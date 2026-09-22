@@ -1003,3 +1003,4 @@
 [2026-09-22 01:36:54 AM] Just showing up matters.
 [2026-09-22 01:36:54 AM] Compounding works on habits too.
 [2026-09-22 01:36:54 AM] Even a tiny push moves the needle.
+[2026-09-22 04:53:32 PM] Done is better than perfect.

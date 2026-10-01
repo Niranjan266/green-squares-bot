@@ -1141,3 +1141,4 @@
 [2026-10-01 11:18:43 PM] Just showing up matters.
 [2026-10-01 11:18:43 PM] You're one step closer to your goal.
 [2026-10-01 11:18:43 PM] Success is the sum of small efforts, repeated.
+[2026-10-01 11:18:43 PM] Read the error message. Then read it again.

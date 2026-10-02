@@ -1121,3 +1121,4 @@
 [2026-10-02 10:40:46 PM] You're one step closer to your goal.
 [2026-10-02 10:40:46 PM] Done is better than perfect.
 [2026-10-02 10:40:46 PM] Consistency is more important than intensity.
+[2026-10-02 10:40:46 PM] Compounding works on habits too.

@@ -1130,3 +1130,4 @@
 [2026-10-03 05:00:13 PM] Just showing up matters.
 [2026-10-03 05:00:13 PM] The habit of showing up wins the game.
 [2026-10-03 05:00:13 PM] Compounding works on habits too.
+[2026-10-03 05:00:13 PM] The best time to start was yesterday. The second best is now.

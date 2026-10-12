@@ -1234,3 +1234,4 @@
 [2026-10-12 08:38:54 PM] Compounding works on habits too.
 [2026-10-12 08:38:54 PM] Ship it, then make it better.
 [2026-10-12 08:38:54 PM] It's not about perfection. It's about progress.
+[2026-10-12 08:38:54 PM] The habit of showing up wins the game.
